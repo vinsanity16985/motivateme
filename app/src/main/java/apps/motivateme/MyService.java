@@ -14,7 +14,7 @@ import java.util.Date;
  * Created by vinsa_000 on 7/26/2016.
  */
 public class MyService extends Service {
-    MyReceiver myReceiver = new MyReceiver();
+
     public void onCreate(){
         //Calls the onCreate() method from Service
         super.onCreate();
@@ -22,7 +22,13 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        setAlarm();
+        //Check to see if their is already an active alarm
+        boolean activeAlarm = (PendingIntent.getBroadcast(this, 0, new Intent(new MainActivity(), MyReceiver.class), PendingIntent.FLAG_NO_CREATE) != null);
+
+        //If there isn't then set the alarm
+        if(!activeAlarm) {
+            setAlarm();
+        }
         //If the app is killed during this onStartCommand()
         // and there are no pending intents then kill this service
         // and don't restart it until explicitly called from somewhere else
@@ -46,8 +52,8 @@ public class MyService extends Service {
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         //Using testing values, will be set to 9:00 AM
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 17);
+        calendar.set(Calendar.HOUR_OF_DAY, 3);
+        calendar.set(Calendar.MINUTE, 20);
 
         //Going to wake up the phone
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 86400000, pendingIntent);

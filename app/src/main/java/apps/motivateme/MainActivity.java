@@ -1,38 +1,55 @@
 package apps.motivateme;
 
-
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.VideoView;
-import android.widget.MediaController;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
-import com.google.android.youtube.player.YouTubeBaseActivity;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback{
+    private MediaPlayer mp;
+    private SurfaceView surface;
+    private SurfaceHolder holder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startService(new Intent(this, MyService.class));
+        mp = MediaPlayer.create(this, R.raw.steph_curry);
+        surface = (SurfaceView)findViewById(R.id.surfaceView1);
+        holder = surface.getHolder();
 
+        startService(new Intent(this, MyService.class));
+    }
+
+    @Override
+    public void onBackPressed(){
+        //Disable Back Button
+        return;
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        //Will set the display once the surface has been created and then play the video
+        mp.setDisplay(holder);
         playVideo();
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        return;
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        return;
     }
 
     public void playVideo(){
         try{
-            MediaPlayer mp = MediaPlayer.create(this, R.raw.why_do_you_dream);
             mp.start();
-            while(mp.isPlaying()){
-                //Lock Home, Back and Settings Buttons
-
-            }
-            //Unlock all buttons
 
             //Release and nullify to not waste system resources
             mp.release();
@@ -44,5 +61,4 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 }
