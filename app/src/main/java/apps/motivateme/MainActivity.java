@@ -2,26 +2,25 @@ package apps.motivateme;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.widget.VideoView;
 
-public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback{
-    private MediaPlayer mp;
-    private SurfaceView surface;
-    private SurfaceHolder holder;
+public class MainActivity extends AppCompatActivity{
+    private VideoView video;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mp = MediaPlayer.create(this, R.raw.steph_curry);
-        surface = (SurfaceView)findViewById(R.id.surfaceView1);
-        holder = surface.getHolder();
+        video = (VideoView)findViewById(R.id.videoView);
 
         startService(new Intent(this, MyService.class));
+
+        playVideo();
     }
 
     @Override
@@ -30,33 +29,28 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         return;
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        //Will set the display once the surface has been created and then play the video
-        mp.setDisplay(holder);
-        playVideo();
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        return;
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        return;
-    }
-
     public void playVideo(){
         try{
-            mp.start();
+            Uri vid = Uri.parse("android.resource://apps.motivateme/raw/sc");
 
-            //Release and nullify to not waste system resources
-            mp.release();
-            mp = null;
+            video.setVideoURI(vid);
+            video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    video.start();
+                }
+            });
 
-            //Shut Down the app, IDK fully what the purpose of the 0 is
-            System.exit(0);
+            video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    //Release to save system resources
+                    mp.release();
+
+                    //Shut Down App, IDK what 0 means
+                    System.exit(0);
+                }
+            });
         }catch(Exception e){
             e.printStackTrace();
         }
