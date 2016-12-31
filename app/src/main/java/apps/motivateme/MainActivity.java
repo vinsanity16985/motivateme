@@ -1,71 +1,83 @@
 package apps.motivateme;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+import android.app.ListActivity;
 import android.os.Bundle;
-import android.view.Window;
-import android.widget.VideoView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.widget.ListAdapter;
 
-public class MainActivity extends Activity {
-    private VideoView video;
-    private boolean hasPlayed;
+import java.util.ArrayList;
+
+public class MainActivity extends ListActivity {
+//    private boolean hasPlayed;
+
+    private static final String TAG = "MainActivity";
+
+    private static ArrayList<Alarm> alarmList;
+    private static ListAdapter adapter;
+
+    private LayoutInflater inflater;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Log.i(TAG, "Started Activity");
         setContentView(R.layout.activity_main);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        video = (VideoView)findViewById(R.id.videoView);
-        hasPlayed = false;
+        inflater = getLayoutInflater();
 
-        startService(new Intent(this, MyService.class));
+        alarmList = new ArrayList<Alarm>();
+        int time = 10;
+        Alarm alarm = new Alarm(time);
+        alarmList.add(alarm);
 
-        playVideo();
+        adapter = new MyAdapter(this,R.layout.row_layout, alarmList);
+
+        setListAdapter(adapter);
+        Log.i(TAG, "Set list adapter");
     }
 
-    @Override
-    public void onBackPressed(){
-        //Disable Back Button
-        return;
-    }
 
-    public void playVideo(){
-        try{
-            Uri vid = Uri.parse("android.resource://apps.motivateme/raw/sc");
 
-            video.setVideoURI(vid);
-            video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    video.start();
-                }
-            });
 
-            video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    if(!hasPlayed){
-                        playVideo();
-                    }
-                    else{
-                        //Release to save system resources
-                        mp.release();
 
-                        //Shut Down App, IDK difference between 0 and 1
-                        System.exit(0);
-                    }
-                    hasPlayed = true;
-                }
-            });
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
+
+
+
+
+
+
+//    public void playVideo(){
+//        try{
+//            Uri vid = Uri.parse("android.resource://apps.motivateme/raw/sc");
+//
+//            video.setVideoURI(vid);
+//            video.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                @Override
+//                public void onPrepared(MediaPlayer mp) {
+//                    video.start();
+//                }
+//            });
+//
+//            video.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                @Override
+//                public void onCompletion(MediaPlayer mp) {
+//                    if(!hasPlayed){
+//                        playVideo();
+//                    }
+//                    else{
+//                        //Release to save system resources
+//                        mp.release();
+//
+//                        //Shut Down App, IDK difference between 0 and 1
+//                        System.exit(0);
+//                    }
+//                    hasPlayed = true;
+//                }
+//            });
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 }
