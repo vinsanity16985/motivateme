@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,9 +34,12 @@ public class MyAdapter extends ArrayAdapter<Alarm> {
         Alarm alarm = getItem(position);
 
         if(alarm != null){
-            TextView text = (TextView) (convertView.findViewById(R.id.row_textview));
+            TextView text = (TextView) (convertView.findViewById(R.id.row_time));
+            Date date = alarm.getTime();
 
-            text.setText(Integer.toString(alarm.getTime()));
+            String formatted = new SimpleDateFormat("hh:mm").format(date);
+
+            text.setText(formatted);
             Log.i(TAG,"Set the text");
         }
 
