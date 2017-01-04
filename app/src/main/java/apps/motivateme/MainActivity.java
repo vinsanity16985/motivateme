@@ -18,18 +18,14 @@ public class MainActivity extends FragmentActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if(data == null){
-            data = new Bundle();
-        }
-
+        data = savedInstanceState;
 
         if(findViewById(R.id.fragment_container) != null){
-            if (savedInstanceState != null) {
-                return;
-            }
-            if(data.getBoolean("Alarm Set", false)) {
-                //Show list of alarms
+            if(data != null) {
+                //Show alarm set fragment
+                AlarmSetFragment alarmSetFragment = new AlarmSetFragment();
+                alarmSetFragment.setArguments(data);
+                getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, alarmSetFragment).commit();
             }
             else{
                 //Show alarm creator
@@ -38,19 +34,5 @@ public class MainActivity extends FragmentActivity{
                 getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, alarmFragment).commit();
             }
         }
-
-
-//        alarmList = new ArrayList<>();
-//
-//        int hour = 10;
-//        int minute = 0;
-//        Alarm alarm = new Alarm(hour, minute);
-//
-//        alarmList.add(alarm);
-//
-//        adapter = new MyAdapter(this,R.layout.row_layout, alarmList);
-//
-//        setListAdapter(adapter);
-//        Log.i(TAG, "Set list adapter");
     }
 }
