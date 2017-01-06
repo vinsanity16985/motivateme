@@ -1,5 +1,7 @@
 package apps.motivateme;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.widget.ListAdapter;
@@ -10,21 +12,22 @@ public class MainActivity extends FragmentActivity{
 
     private static final String TAG = "MainActivity";
 
+    private SharedPreferences myPrefs;
+
     private static ArrayList<Alarm> alarmList;
     private static ListAdapter adapter;
-    private static Bundle data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        data = savedInstanceState;
+        myPrefs = getSharedPreferences("MotivateMePrefs", Context.MODE_PRIVATE);
 
         if(findViewById(R.id.fragment_container) != null){
-            if(data != null) {
+            if(myPrefs.getBoolean("alarm set", true)) {
                 //Show alarm set fragment
                 AlarmSetFragment alarmSetFragment = new AlarmSetFragment();
-                alarmSetFragment.setArguments(data);
+                alarmSetFragment.setArguments(savedInstanceState);
                 getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, alarmSetFragment).commit();
             }
             else{
