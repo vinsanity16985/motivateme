@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
@@ -17,8 +18,17 @@ import android.widget.Button;
  */
 public class AlarmSetFragment extends Fragment {
 
-    private SharedPreferences myPrefs;
+    private static final int NOT_FOUND = -1;
 
+    private SharedPreferences myPrefs;
+    private int hour;
+    private int minute;
+    private boolean tod;
+    private String cTime;
+    private String aTime;
+
+    private TextView currentTime;
+    private TextView alarmTime;
     private Button deleteButton;
 
     public AlarmSetFragment() {
@@ -31,8 +41,24 @@ public class AlarmSetFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm_set, container, false);
         myPrefs = getContext().getSharedPreferences("MotivateMePrefs", Context.MODE_PRIVATE);
-
         deleteButton = (Button)view.findViewById(R.id.delete_button);
+        currentTime = (TextView)view.findViewById(R.id.textview_current);
+        alarmTime = (TextView)view.findViewById(R.id.textview_alarm);
+
+        hour = myPrefs.getInt("hour", NOT_FOUND);
+        minute = myPrefs.getInt("minute", NOT_FOUND);
+        tod = myPrefs.getBoolean("tod", false);
+
+        cTime = CurrentTime.getTime();
+        if(tod){
+            aTime = "Alarm Set for " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + "am";
+        }
+        else{
+            aTime = "Alarm Set for " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + "pm";
+        }
+
+        currentTime.setText(cTime);
+        alarmTime.setText(aTime);
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override

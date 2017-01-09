@@ -25,6 +25,7 @@ import java.util.Calendar;
  */
 public class AlarmFragment extends Fragment {
     private static final String TAG = "AlarmFragment";
+    private static final int NOON = 12;
 
     private SharedPreferences myPrefs;
 
@@ -66,17 +67,18 @@ public class AlarmFragment extends Fragment {
         setHourPicker(hourPicker);
         setMinutePicker(minutePicker);
 
-        bottomText.setText(bottom);
+        updateText();
 
-
+        //ToggleButton onClickListener
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 tod = toggleButton.isChecked();
-                Toast.makeText(getContext(), "" + tod, Toast.LENGTH_SHORT).show();
+                updateText();
             }
         });
 
+        //Button onClickListener
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,8 +102,8 @@ public class AlarmFragment extends Fragment {
 
     //Returns properly formatted hour
     private int getHour(){
-        int pHour = calendar.getTime().getHours();
-        if(pHour > 12){
+        int pHour = calendar.getTime().getHours(); //this returns military time ex. 5:00 pm = 17:00
+        if(pHour > NOON){
             return pHour - 12;
         }
         else{
@@ -110,7 +112,12 @@ public class AlarmFragment extends Fragment {
     }
 
     private void updateText() {
-        bottom = "Alarm set for " + hour + ":" + minute;
+        if(tod){
+            bottom = "Alarm set for " + hour + ":" + String.format("%02d", minute) + " am";
+        }
+        else{
+            bottom = "Alarm set for " + hour + ":" + String.format("%02d", minute) + " pm";
+        }
         bottomText.setText(bottom);
     }
 
