@@ -21,6 +21,9 @@ public class AlarmSetFragment extends Fragment {
     private static final int NOT_FOUND = -1;
 
     private SharedPreferences myPrefs;
+    private IntentInterface listener;
+    private Context context;
+
     private int hour;
     private int minute;
     private boolean tod;
@@ -35,12 +38,22 @@ public class AlarmSetFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context c){
+        super.onAttach(c);
+        if(c instanceof IntentInterface){
+            listener = (IntentInterface)c;
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm_set, container, false);
-        myPrefs = getContext().getSharedPreferences("MotivateMePrefs", Context.MODE_PRIVATE);
+
+        context = getContext();
+        myPrefs = context.getSharedPreferences("MotivateMePrefs", Context.MODE_PRIVATE);
+
         deleteButton = (Button)view.findViewById(R.id.delete_button);
         currentTime = (TextView)view.findViewById(R.id.textview_current);
         alarmTime = (TextView)view.findViewById(R.id.textview_alarm);
@@ -63,12 +76,16 @@ public class AlarmSetFragment extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Erase Alarm Data in SharedPreferences
                 SharedPreferences.Editor editor = myPrefs.edit();
                 editor.putBoolean("alarm set", false);
                 editor.commit();
 
-                AlarmFragment fragment = new AlarmFragment();
+                //Cancel the alarm
+                listener.cancelAlarm();
 
+                //Switch back to AlarmFragment
+                AlarmFragment fragment = new AlarmFragment();
                 FragmentManager fManager = getFragmentManager();
                 fManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment)

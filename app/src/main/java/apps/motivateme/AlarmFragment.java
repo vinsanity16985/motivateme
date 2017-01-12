@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.Calendar;
@@ -27,7 +25,9 @@ public class AlarmFragment extends Fragment {
     private static final String TAG = "AlarmFragment";
     private static final int NOON = 12;
 
+    private Context context;
     private SharedPreferences myPrefs;
+    private IntentInterface listener;
 
     private TextView bottomText;
     private NumberPicker hourPicker;
@@ -45,13 +45,21 @@ public class AlarmFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context c){
+        super.onAttach(c);
+        if(c instanceof IntentInterface){
+            listener = (IntentInterface)c;
+        }
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_alarm, container, false);
 
-        myPrefs = getContext().getSharedPreferences("MotivateMePrefs", Context.MODE_PRIVATE);
+        context = getContext();
+        myPrefs = context.getSharedPreferences("MotivateMePrefs", Context.MODE_PRIVATE);
 
         bottomText = (TextView)view.findViewById(R.id.bottom_text);
         hourPicker = (NumberPicker)view.findViewById(R.id.hour_picker);
@@ -82,6 +90,7 @@ public class AlarmFragment extends Fragment {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Save alarm data to SharedPreferences
                 SharedPreferences.Editor editor = myPrefs.edit();
                 editor.putInt("hour", hour);
                 editor.putInt("minute", minute);
@@ -89,6 +98,18 @@ public class AlarmFragment extends Fragment {
                 editor.putBoolean("alarm set", true);
                 editor.commit();
 
+                //Set Alarm to specified time
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                if(tod){
+                    calendar.set(Calendar.HOUR_OF_DAY, hour);
+                }
+                else{
+                    calendar.set(Calendar.HOUR_OF_DAY, hour + 12);
+                }
+                calendar.set(Calendar.MINUTE, minute);
+                listener.setAlarm(calendar);
+
+                //Change Fragment to AlarmSetFragment
                 AlarmSetFragment fragment = new AlarmSetFragment();
                 FragmentManager fManager = getFragmentManager();
                 fManager.beginTransaction()
