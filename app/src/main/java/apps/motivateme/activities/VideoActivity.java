@@ -2,6 +2,7 @@ package apps.motivateme.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,9 @@ public class VideoActivity extends Activity implements MediaPlayer.OnCompletionL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video);
 
+        getActionBar().hide();
+        setAudioToMax();
+
         mediaPlayer = (VideoView) findViewById(R.id.videoView);
         controller = new MediaController(this);
 
@@ -28,12 +32,24 @@ public class VideoActivity extends Activity implements MediaPlayer.OnCompletionL
 
         controller.setAnchorView(mediaPlayer);
 
+
         mediaPlayer.setMediaController(controller);
         mediaPlayer.setVideoURI(Uri.parse(path));
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(this);
 
+        if(savedInstanceState != null){
+            mediaPlayer.seekTo(savedInstanceState.getInt("current position"));
+        }
+
         setVideoDimensions();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+
+        savedInstanceState.putInt("current position", mediaPlayer.getCurrentPosition());
     }
 
 
@@ -56,5 +72,10 @@ public class VideoActivity extends Activity implements MediaPlayer.OnCompletionL
         params.height = metrics.heightPixels;
         params.leftMargin = 0;
         mediaPlayer.setLayoutParams(params);
+    }
+
+    private void setAudioToMax(){
+        AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),0);
     }
 }
