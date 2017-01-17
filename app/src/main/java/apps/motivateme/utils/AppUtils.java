@@ -5,6 +5,7 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.PowerManager;
 import android.util.Log;
 
 /**
@@ -30,10 +31,9 @@ public class AppUtils {
         }
         String foregroundAppName = foregroundAppPackageInfo.applicationInfo.loadLabel(pm).toString();
         String appName = "MotivateMe";
-        boolean b = foregroundAppName.toLowerCase().equals(appName.toLowerCase());
-        Log.d(TAG, "Is the app in the foreground: " + b);
+        boolean appInForeground = foregroundAppName.toLowerCase().equals(appName.toLowerCase());
 
-        return foregroundAppName.toLowerCase().equals(appName.toLowerCase());          //If equal then return true, otherwise false
+        return appInForeground;          //If equal then return true, otherwise false
     }
 
     public static boolean isPhoneLocked(Context context){
@@ -43,5 +43,12 @@ public class AppUtils {
             isLocked = true;
         }
         return isLocked;
+    }
+
+    public static void turnOnScreen(Context context){
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "tag");
+        wl.acquire();
+        wl.release();
     }
 }

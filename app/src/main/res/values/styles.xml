@@ -6,12 +6,12 @@
     </style>
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:titleTextStyle">@style/ActionBarTextColor</item>
-        <item name="android:background">@color/colorActionBar</item>
+        <item name="android:background">@color/light_blue_3</item>
     </style>
     <style name="ActionBarTextColor" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColor">@color/black</item>
     </style>
     <style name="AlarmText" parent="@android:style/TextAppearance.DeviceDefault.Large">
-        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>

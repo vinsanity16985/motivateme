@@ -26,6 +26,11 @@ public class AlarmFragment extends Fragment {
     private static final String TAG = "AlarmFragment";
     private static final int NOON = 12;
 
+    private static final String COLON = ":";
+    private static final String ALARMSET = "Alarm will be set for ";
+    private static final String AM = " AM";
+    private static final String PM = " PM";
+
     private Context context;
     private SharedPreferences myPrefs;
     private IntentInterface listener;
@@ -72,7 +77,7 @@ public class AlarmFragment extends Fragment {
         hour = getHour();
         minute = calendar.getTime().getMinutes();
         tod = toggleButton.isChecked();
-        bottom = "Alarm Set for " + hour + ":" + minute;
+        bottom = ALARMSET + hour + COLON + minute;
         setHourPicker(hourPicker);
         setMinutePicker(minutePicker);
 
@@ -128,10 +133,10 @@ public class AlarmFragment extends Fragment {
 
     private void updateText() {
         if(tod){
-            bottom = "Alarm set for " + hour + ":" + String.format("%02d", minute) + " am";
+            bottom = ALARMSET + hour + COLON + String.format("%02d", minute) + AM;
         }
         else{
-            bottom = "Alarm set for " + hour + ":" + String.format("%02d", minute) + " pm";
+            bottom = ALARMSET + hour + COLON + String.format("%02d", minute) + PM;
         }
         bottomText.setText(bottom);
     }

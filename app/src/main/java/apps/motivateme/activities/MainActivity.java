@@ -38,7 +38,6 @@ public class MainActivity extends FragmentActivity implements IntentInterface {
         alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         fMgr = getSupportFragmentManager();
 
-
         if(findViewById(R.id.fragment_container) != null){
             if(myPrefs.getBoolean("alarm set", true)) {
                 //Show alarm set fragment

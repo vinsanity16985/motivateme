@@ -20,11 +20,9 @@ public class AlarmService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if(!AppUtils.isAppInForeground(this) || AppUtils.isPhoneLocked(this)){          //If the app is not in the foreground or the phone is locked
+            AppUtils.turnOnScreen(getBaseContext());
             NotificationManager alarmNotificationManager = (NotificationManager) this
                     .getSystemService(Context.NOTIFICATION_SERVICE);
-
-            PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                    new Intent(this, VideoActivity.class), 0);
 
             String title = "Alarm";
             String msg = "Wake Up";
@@ -34,13 +32,12 @@ public class AlarmService extends IntentService {
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                     .setContentText(msg);
 
-            builder.setContentIntent(contentIntent);
+            builder.setAutoCancel(true);
             alarmNotificationManager.notify(1, builder.build());
         }
-        else{
-            Intent videoIntent = new Intent(this, VideoActivity.class);         //Intent to open VideoActivity
-            videoIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(videoIntent);
-        }
+
+        Intent videoIntent = new Intent(this, VideoActivity.class);         //Intent to open VideoActivity
+        videoIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(videoIntent);
     }
 }
