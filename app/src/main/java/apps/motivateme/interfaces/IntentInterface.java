@@ -1,4 +1,4 @@
-package apps.motivateme;
+package apps.motivateme.interfaces;
 
 import java.util.Calendar;
 

@@ -1,7 +1,9 @@
-package apps.motivateme;
+package apps.motivateme.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import apps.motivateme.R;
 
 public class VideoActivity extends Activity {
 

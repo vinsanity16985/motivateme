@@ -1,12 +1,10 @@
-package apps.motivateme;
+package apps.motivateme.fragments;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,9 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.util.Calendar;
+
+import apps.motivateme.interfaces.IntentInterface;
+import apps.motivateme.R;
 
 
 /**
@@ -108,13 +109,6 @@ public class AlarmFragment extends Fragment {
                 }
                 calendar.set(Calendar.MINUTE, minute);
                 listener.setAlarm(calendar);
-
-                //Change Fragment to AlarmSetFragment
-                AlarmSetFragment fragment = new AlarmSetFragment();
-                FragmentManager fManager = getFragmentManager();
-                fManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .commit();
             }
         });
 

@@ -1,14 +1,14 @@
-package apps.motivateme;
+package apps.motivateme.utils;
 
 import java.util.Calendar;
 
 /**
  * Created by vinsa_000 on 1/9/2017.
  */
-public class CurrentTime {
+public class TimeUtils {
     private static Calendar calendar;
 
-    private CurrentTime(){}
+    private TimeUtils(){}
 
     public static String getTime(){
         calendar = Calendar.getInstance();

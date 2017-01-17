@@ -1,4 +1,4 @@
-package apps.motivateme;
+package apps.motivateme.fragments;
 
 
 import android.content.Context;
@@ -11,6 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import apps.motivateme.utils.TimeUtils;
+import apps.motivateme.interfaces.IntentInterface;
+import apps.motivateme.R;
+import apps.motivateme.fragments.AlarmFragment;
 
 
 /**
@@ -62,7 +67,7 @@ public class AlarmSetFragment extends Fragment {
         minute = myPrefs.getInt("minute", NOT_FOUND);
         tod = myPrefs.getBoolean("tod", false);
 
-        cTime = CurrentTime.getTime();
+        cTime = TimeUtils.getTime();
         if(tod){
             aTime = "Alarm Set for " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + "am";
         }
@@ -83,13 +88,6 @@ public class AlarmSetFragment extends Fragment {
 
                 //Cancel the alarm
                 listener.cancelAlarm();
-
-                //Switch back to AlarmFragment
-                AlarmFragment fragment = new AlarmFragment();
-                FragmentManager fManager = getFragmentManager();
-                fManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .commit();
             }
         });
 
